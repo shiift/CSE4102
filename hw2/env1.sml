@@ -27,9 +27,9 @@ fun env_lookup (nil:Env) (name:string) = raise NameNotBound name
   ;
 
 (* Test Cases *)
-val e1  =   env_new ();
-val e2  =   env_bind    e1  "x" 100;
-val e3  =   env_bind    e2  "y" 200;
-env_lookup  e3  "x";
-env_lookup  e3  "y";
-env_lookup  e3  "z";
+val e1 = env_new ();
+val e2 = env_bind e1 "x" 100;
+val e3 = env_bind e2 "y" 200;
+env_lookup e3 "x";
+env_lookup e3 "y";
+env_lookup e3 "z";
