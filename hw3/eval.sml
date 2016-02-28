@@ -68,7 +68,7 @@ fun e2s (Bool b) = "Bool(" ^ (Bool.toString b) ^ ")"
 
 (* Evaluation Function *)
 
-fun eval (env:Expr Env) (Sym s) = (env,(env s))
+fun eval (env:Expr Env) (Sym s) = (env, (env s))
   (* Add: evaluates the two input expressions, then adds the results *)
   | eval env (Add (x, y)) =
     (case ((eval env x), (eval env y)) of
@@ -110,14 +110,15 @@ fun eval (env:Expr Env) (Sym s) = (env,(env s))
             (case arg of
                   (Sym s) =>
                     let
-                      val (_, return) = (eval (env_bind envc s p) steps)
+                      val (_, param) = (eval env p)
+                      val (_, return) = (eval (env_bind envc s param) steps)
                     in
                       (env, return)
                     end
                 | (_) => raise InvalidParameterError "Parameter must be a Symbol")
         | (_) => raise InvalidApplicationError "Application must be applied to a Fun")
   (* catch all for other expression types *)
-  | eval env expr = (env, expr)A
+  | eval env expr = (env, expr)
     (* Let helper binds all of the id:value pairs in the let and returns the new
     * resulting environment *)
     and eval_let_helper env [] = env

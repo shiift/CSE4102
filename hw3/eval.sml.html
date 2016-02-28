@@ -123,7 +123,7 @@ if ('onhashchange' in window) {
 <span id="L68" class="LineNr"> 68 </span>
 <span id="L69" class="LineNr"> 69 </span><span class="Comment">(* Evaluation Function *)</span>
 <span id="L70" class="LineNr"> 70 </span>
-<span id="L71" class="LineNr"> 71 </span><span class="Statement">fun</span> eval <span class="Statement">(</span>env:<span class="Constant">Expr</span> <span class="Constant">Env</span><span class="Statement">)</span> <span class="Statement">(</span><span class="Constant">Sym</span> s<span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>env,<span class="Statement">(</span>env s<span class="Statement">))</span>
+<span id="L71" class="LineNr"> 71 </span><span class="Statement">fun</span> eval <span class="Statement">(</span>env:<span class="Constant">Expr</span> <span class="Constant">Env</span><span class="Statement">)</span> <span class="Statement">(</span><span class="Constant">Sym</span> s<span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>env, <span class="Statement">(</span>env s<span class="Statement">))</span>
 <span id="L72" class="LineNr"> 72 </span>  <span class="Comment">(* Add: evaluates the two input expressions, then adds the results *)</span>
 <span id="L73" class="LineNr"> 73 </span>  <span class="Statement">|</span> eval env <span class="Statement">(</span><span class="Constant">Add</span> <span class="Statement">(</span>x, y<span class="Statement">))</span> <span class="Statement">=</span>
 <span id="L74" class="LineNr"> 74 </span>    <span class="Statement">(case</span> <span class="Statement">((</span>eval env x<span class="Statement">)</span>, <span class="Statement">(</span>eval env y<span class="Statement">))</span> <span class="Statement">of</span>
@@ -165,29 +165,30 @@ if ('onhashchange' in window) {
 <span id="L110" class="LineNr">110 </span>            <span class="Statement">(case</span> arg <span class="Statement">of</span>
 <span id="L111" class="LineNr">111 </span>                  <span class="Statement">(</span><span class="Constant">Sym</span> s<span class="Statement">)</span> <span class="Statement">=</span>&gt;
 <span id="L112" class="LineNr">112 </span>                    <span class="Statement">let</span>
-<span id="L113" class="LineNr">113 </span>                      <span class="Statement">val</span> <span class="Statement">(</span><span class="Statement">_</span>, return<span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>eval <span class="Statement">(</span>env_bind envc s p<span class="Statement">)</span> steps<span class="Statement">)</span>
-<span id="L114" class="LineNr">114 </span>                    <span class="Statement">in</span>
-<span id="L115" class="LineNr">115 </span>                      <span class="Statement">(</span>env, return<span class="Statement">)</span>
-<span id="L116" class="LineNr">116 </span>                    <span class="Statement">end</span>
-<span id="L117" class="LineNr">117 </span>                <span class="Statement">|</span> <span class="Statement">(</span><span class="Statement">_</span><span class="Statement">)</span> <span class="Statement">=</span>&gt; <span class="Statement">raise</span> <span class="Constant">InvalidParameterError</span> <span class="Constant">&quot;Parameter must be a Symbol&quot;</span><span class="Statement">)</span>
-<span id="L118" class="LineNr">118 </span>        <span class="Statement">|</span> <span class="Statement">(</span><span class="Statement">_</span><span class="Statement">)</span> <span class="Statement">=</span>&gt; <span class="Statement">raise</span> <span class="Constant">InvalidApplicationError</span> <span class="Constant">&quot;Application must be applied to a Fun&quot;</span><span class="Statement">)</span>
-<span id="L119" class="LineNr">119 </span>  <span class="Comment">(* catch all for other expression types *)</span>
-<span id="L120" class="LineNr">120 </span>  <span class="Statement">|</span> eval env expr <span class="Statement">=</span> <span class="Statement">(</span>env, expr<span class="Statement">)</span><span class="Constant">A</span>
-<span id="L121" class="LineNr">121 </span>    <span class="Comment">(* Let helper binds all of the id:value pairs in the let and returns the new</span>
-<span id="L122" class="LineNr">122 </span><span class="Comment">    * resulting environment *)</span>
-<span id="L123" class="LineNr">123 </span>    <span class="Statement">and</span> eval_let_helper env <span class="Constant">[]</span> <span class="Statement">=</span> env
-<span id="L124" class="LineNr">124 </span>      <span class="Statement">|</span> eval_let_helper env <span class="Statement">((</span>id, v<span class="Statement">)</span><span class="Statement">::</span>tail<span class="Statement">)</span> <span class="Statement">=</span>
-<span id="L125" class="LineNr">125 </span>        <span class="Statement">(</span>eval_let_helper <span class="Statement">(</span>env_bind env id v<span class="Statement">)</span> tail<span class="Statement">)</span>
-<span id="L126" class="LineNr">126 </span>    <span class="Comment">(* Seq helper recursively evaluates all of the expressions in the sequence</span>
-<span id="L127" class="LineNr">127 </span><span class="Comment">    * and returns the result of the final expression in the sequence *)</span>
-<span id="L128" class="LineNr">128 </span>    <span class="Statement">and</span> eval_seq_helper env <span class="Constant">[]</span> <span class="Statement">=</span> <span class="Statement">(</span>env, <span class="Constant">Nothing</span><span class="Statement">)</span> <span class="Comment">(* edge case catch *)</span>
-<span id="L129" class="LineNr">129 </span>      <span class="Statement">|</span> eval_seq_helper env <span class="Statement">(</span>head<span class="Statement">::</span><span class="Constant">[]</span><span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>eval env head<span class="Statement">)</span>
-<span id="L130" class="LineNr">130 </span>      <span class="Statement">|</span> eval_seq_helper env <span class="Statement">(</span>expr<span class="Statement">::</span>tail<span class="Statement">)</span> <span class="Statement">=</span>
-<span id="L131" class="LineNr">131 </span>        <span class="Statement">let</span>
-<span id="L132" class="LineNr">132 </span>          <span class="Statement">val</span> <span class="Statement">(</span>e,<span class="Statement">_</span><span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>eval env expr<span class="Statement">)</span>
-<span id="L133" class="LineNr">133 </span>        <span class="Statement">in</span>
-<span id="L134" class="LineNr">134 </span>          <span class="Statement">(</span>eval_seq_helper e tail<span class="Statement">)</span>
-<span id="L135" class="LineNr">135 </span>        <span class="Statement">end</span><span class="Statement">;</span>
+<span id="L113" class="LineNr">113 </span>                      <span class="Statement">val</span> <span class="Statement">(</span><span class="Statement">_</span>, param<span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>eval env p<span class="Statement">)</span>
+<span id="L114" class="LineNr">114 </span>                      <span class="Statement">val</span> <span class="Statement">(</span><span class="Statement">_</span>, return<span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>eval <span class="Statement">(</span>env_bind envc s param<span class="Statement">)</span> steps<span class="Statement">)</span>
+<span id="L115" class="LineNr">115 </span>                    <span class="Statement">in</span>
+<span id="L116" class="LineNr">116 </span>                      <span class="Statement">(</span>env, return<span class="Statement">)</span>
+<span id="L117" class="LineNr">117 </span>                    <span class="Statement">end</span>
+<span id="L118" class="LineNr">118 </span>                <span class="Statement">|</span> <span class="Statement">(</span><span class="Statement">_</span><span class="Statement">)</span> <span class="Statement">=</span>&gt; <span class="Statement">raise</span> <span class="Constant">InvalidParameterError</span> <span class="Constant">&quot;Parameter must be a Symbol&quot;</span><span class="Statement">)</span>
+<span id="L119" class="LineNr">119 </span>        <span class="Statement">|</span> <span class="Statement">(</span><span class="Statement">_</span><span class="Statement">)</span> <span class="Statement">=</span>&gt; <span class="Statement">raise</span> <span class="Constant">InvalidApplicationError</span> <span class="Constant">&quot;Application must be applied to a Fun&quot;</span><span class="Statement">)</span>
+<span id="L120" class="LineNr">120 </span>  <span class="Comment">(* catch all for other expression types *)</span>
+<span id="L121" class="LineNr">121 </span>  <span class="Statement">|</span> eval env expr <span class="Statement">=</span> <span class="Statement">(</span>env, expr<span class="Statement">)</span>
+<span id="L122" class="LineNr">122 </span>    <span class="Comment">(* Let helper binds all of the id:value pairs in the let and returns the new</span>
+<span id="L123" class="LineNr">123 </span><span class="Comment">    * resulting environment *)</span>
+<span id="L124" class="LineNr">124 </span>    <span class="Statement">and</span> eval_let_helper env <span class="Constant">[]</span> <span class="Statement">=</span> env
+<span id="L125" class="LineNr">125 </span>      <span class="Statement">|</span> eval_let_helper env <span class="Statement">((</span>id, v<span class="Statement">)</span><span class="Statement">::</span>tail<span class="Statement">)</span> <span class="Statement">=</span>
+<span id="L126" class="LineNr">126 </span>        <span class="Statement">(</span>eval_let_helper <span class="Statement">(</span>env_bind env id v<span class="Statement">)</span> tail<span class="Statement">)</span>
+<span id="L127" class="LineNr">127 </span>    <span class="Comment">(* Seq helper recursively evaluates all of the expressions in the sequence</span>
+<span id="L128" class="LineNr">128 </span><span class="Comment">    * and returns the result of the final expression in the sequence *)</span>
+<span id="L129" class="LineNr">129 </span>    <span class="Statement">and</span> eval_seq_helper env <span class="Constant">[]</span> <span class="Statement">=</span> <span class="Statement">(</span>env, <span class="Constant">Nothing</span><span class="Statement">)</span> <span class="Comment">(* edge case catch *)</span>
+<span id="L130" class="LineNr">130 </span>      <span class="Statement">|</span> eval_seq_helper env <span class="Statement">(</span>head<span class="Statement">::</span><span class="Constant">[]</span><span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>eval env head<span class="Statement">)</span>
+<span id="L131" class="LineNr">131 </span>      <span class="Statement">|</span> eval_seq_helper env <span class="Statement">(</span>expr<span class="Statement">::</span>tail<span class="Statement">)</span> <span class="Statement">=</span>
+<span id="L132" class="LineNr">132 </span>        <span class="Statement">let</span>
+<span id="L133" class="LineNr">133 </span>          <span class="Statement">val</span> <span class="Statement">(</span>e,<span class="Statement">_</span><span class="Statement">)</span> <span class="Statement">=</span> <span class="Statement">(</span>eval env expr<span class="Statement">)</span>
+<span id="L134" class="LineNr">134 </span>        <span class="Statement">in</span>
+<span id="L135" class="LineNr">135 </span>          <span class="Statement">(</span>eval_seq_helper e tail<span class="Statement">)</span>
+<span id="L136" class="LineNr">136 </span>        <span class="Statement">end</span><span class="Statement">;</span>
 </pre>
 </body>
 </html>
