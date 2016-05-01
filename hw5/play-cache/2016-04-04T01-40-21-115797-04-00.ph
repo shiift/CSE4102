@@ -1,0 +1,1 @@
+MinesweeperGame new openInWorld.Color browse.SimpleSwitchMorph browse.n := 10.n browse.
